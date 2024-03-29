@@ -7,6 +7,8 @@ const {
   validateName,
   validatePassword,
 } = require("../utils/validators");
+const send_email = require("../utils/models_email/send_email_recovery_link");
+const send_email_welcome = require("../utils/models_email/send_email_welcome");
 
 const router = express.Router();
 
@@ -47,6 +49,8 @@ router.post("/auth/register", async (req, res) => {
     await newUser.save();
 
     console.log(newUser);
+    await send_email_welcome(userData.email)
+    console.log(email)
     return res.status(201).json({ msg: "User created successfully" });
   } catch (err) {
     console.log(err);
