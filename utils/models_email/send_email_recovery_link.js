@@ -15,13 +15,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function send_email_recovery_link() {
+async function send_email_recovery_link(resetLink, email) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: `"ProSchedule App 👻" <${username}>`,
-    to: [username],
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
+    to: [username, email],
+    subject: "Redefinição de Senha ✔", // Subject line
+    text: "Recovery password", // plain text body
     html: `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -178,7 +178,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align="left">
   <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:37px; v-text-anchor:middle; width:218px;" arcsize="0%"  stroke="f" fillcolor="#ffc25e"><w:anchorlock/><center style="color:#000000;"><![endif]-->
-    <a href=${"www.google.com"} target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #000000; background-color: #ffc25e; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:42%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
+    <a href=${resetLink} target="_blank" class="v-button v-size-width" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #000000; background-color: #ffc25e; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:42%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
       <span style="display:block;padding:10px 20px;line-height:120%;">Redefinir Senha.</span>
     </a>
     <!--[if mso]></center></v:roundrect><![endif]-->
