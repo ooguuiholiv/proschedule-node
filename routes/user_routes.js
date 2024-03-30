@@ -16,14 +16,14 @@ const router = express.Router();
 
 router.post("/auth/register", async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    const { fullname, email, password, phone } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(403).json({ err: "User already exists" });
     }
 
-    if (!validateName(name)) {
+    if (!validateName(fullname)) {
       return res.status(400).json({
         err: "Invalid user name: name must be longer than two characters and must not include any numbers or special characters",
       });
@@ -41,7 +41,7 @@ router.post("/auth/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, (saltOrRounds = 10));
     const userData = {
-      name,
+      fullname,
       email,
       phone,
       password: hashedPassword,
