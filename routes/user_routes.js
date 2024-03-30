@@ -7,6 +7,7 @@ const {
   validateName,
   validatePassword,
 } = require("../utils/validators");
+const isAuthenticated = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -108,6 +109,11 @@ router.get("/auth/users", async (req, res) => {
     console.log(err);
     return res.status(500).json({ err: err.message });
   }
+});
+
+ router.get("/auth/is-authenticated", isAuthenticated, (req, res) => {
+   res.json({ authenticated: true });
+
 });
 
 module.exports = router;
