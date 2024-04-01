@@ -17,6 +17,7 @@ const router = express.Router();
 router.post("/auth/register", async (req, res) => {
   try {
     const { fullname, email, password, phone } = req.body;
+    const slug = email.split("@")[0];
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -44,6 +45,7 @@ router.post("/auth/register", async (req, res) => {
       fullname,
       email,
       phone,
+      slug,
       password: hashedPassword,
     };
 
@@ -85,7 +87,7 @@ router.post("/auth/login", async (req, res) => {
       return res.status(400).json({ err: "Invalid credentials" });
     }
     console.log(existingUser, existingUser.id);
-    const payload = { user: { id: existingUser.id } };
+    const payload = { user: { id: existingUser.id, email: existingUser.fullname } };
     const bearerToken = await jwt.sign(payload, process.env.SECRET, {
       expiresIn: 3600,
     });
@@ -132,7 +134,7 @@ router.patch("/auth/forgot-password", async (req, res) => {
     const min30 = 1800000;
     const resetTokenExpiry = Date.now() + min30;
     await PasswordReset.create({ email, token, resetTokenExpiry });
-    const resetLink = `http://localhost:7777/auth/reset-password?token=${token}`;
+    const resetLink = `http://localhost:5173/auth/reset-pass?token=${token}`;
     send_email_recovery_link(resetLink, email);
     return res
       .status(200)
@@ -143,9 +145,8 @@ router.patch("/auth/forgot-password", async (req, res) => {
   }
 });
 
-router.post("/auth/reset-password", async (req, res) => {
-  const { newPassword, confirmPassword } = req.body;
-  const { token } = req.query;
+router.post("/auth/reset-pass", async (req, res) => {
+  const { newPassword, confirmPassword, token } = req.body;
   try {
     const decoded = jwt.verify(token, secretJwt);
     const { email } = decoded;
@@ -183,9 +184,8 @@ router.post("/auth/reset-password", async (req, res) => {
   }
 });
 
- router.get("/auth/is-authenticated", isAuthenticated, (req, res) => {
-   res.json({ authenticated: true });
- });
-
+router.get("/auth/is-authenticated", isAuthenticated, (req, res) => {
+  res.json({ authenticated: true });
+});
 
 module.exports = router;
